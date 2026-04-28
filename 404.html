@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MDI Dealer Mockup</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --panel: #ffffff;
+      --ink: #132a3e;
+      --muted: #64788e;
+      --line: #d8e1ec;
+      --accent: #46a5a5;
+      --accent-2: #006fb9;
+      --navy: #132a3e;
+      --shadow: 0 10px 24px rgba(19, 42, 62, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #f7fafe 0%, var(--bg) 100%);
+    }
+    .page {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 22px 18px 36px;
+    }
+    .hero {
+      background: linear-gradient(135deg, var(--navy), #244a67);
+      color: #f7fbff;
+      border-radius: 18px;
+      padding: 24px 28px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      right: -80px;
+      bottom: -100px;
+      border-radius: 50%;
+      background: rgba(70, 165, 165, 0.22);
+    }
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: clamp(30px, 4vw, 42px);
+      line-height: 1.05;
+    }
+    .hero p {
+      margin: 0;
+      max-width: 920px;
+      color: rgba(247, 251, 255, 0.86);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .hero-meta {
+      margin-top: 18px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .pill {
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.08);
+      color: #f7fbff;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+    .summary-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .summary-card, .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+    .summary-card {
+      padding: 14px 16px;
+    }
+    .summary-label {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .summary-value {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 18px 0 14px;
+    }
+    .tab {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+    }
+    .tab.active {
+      background: var(--navy);
+      color: #fff;
+      border-color: var(--navy);
+    }
+    .tab-panel {
+      display: none;
+    }
+    .tab-panel.active {
+      display: block;
+    }
+    .grid-two {
+      display: grid;
+      grid-template-columns: 1.15fr 0.95fr;
+      gap: 14px;
+    }
+    .panel {
+      padding: 16px;
+    }
+    .panel h2, .panel h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+      margin-bottom: 16px;
+    }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .kpi {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 4px;
+      background: var(--accent);
+    }
+    .kpi-label {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .kpi-value {
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .kpi-context {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .metric-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .metric-table th,
+    .metric-table td {
+      border-bottom: 1px solid #e8eef5;
+      padding: 10px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    .metric-table th {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .bars {
+      display: grid;
+      gap: 12px;
+    }
+    .bar-row {
+      display: grid;
+      grid-template-columns: 200px 1fr 90px;
+      gap: 12px;
+      align-items: center;
+      font-size: 13px;
+    }
+    .bar-track {
+      height: 14px;
+      background: #e8eef5;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), #6cc9c9);
+    }
+    .bar-fill.alt {
+      background: linear-gradient(90deg, var(--accent-2), #5ad2f2);
+    }
+    .note-box {
+      border-radius: 14px;
+      padding: 16px;
+      background: linear-gradient(180deg, #f8fbff 0%, #eef4fb 100%);
+      border: 1px solid var(--line);
+    }
+    .note-box strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+    .footer {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      background: #eaf7f7;
+      color: #1f6f6f;
+    }
+    @media (max-width: 1120px) {
+      .summary-strip, .grid-two, .kpi-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    @media (max-width: 760px) {
+      .summary-strip, .grid-two, .kpi-grid {
+        grid-template-columns: 1fr;
+      }
+      .bar-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <h1>Market & Dealer Insights</h1>
+      <p>
+        Dealer-facing BMW Group mockup with executive KPI views plus detailed listing tabs.
+        The new detailed tabs below are structural mockups derived from the BMW account profile so we can validate the final product shape before wiring listing-level cache tables.
+      </p>
+      <div class="hero-meta">
+        <span class="pill">March 2026 cached dealer snapshot</span>
+        <span class="pill">Listing-detail tabs are mock structure</span>
+        <span class="pill">SMG palette inspired by AU KPI Health Metrics</span>
+      </div>
+    </section>
+
+    <section class="summary-strip">
+      <div class="summary-card">
+        <div class="summary-label">Dealer</div>
+        <div id="summaryDealer" class="summary-value"></div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Location</div>
+        <div id="summaryLocation" class="summary-value"></div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Package</div>
+        <div id="summaryPackage" class="summary-value"></div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Benchmark Logic</div>
+        <div class="summary-value">Same canton, package and slot profile</div>
+      </div>
+    </section>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="overview">1. Overview</button>
+      <button class="tab" data-tab="visibility">2. Visibility</button>
+      <button class="tab" data-tab="inventory">3. Inventory</button>
+      <button class="tab" data-tab="lead">4. Lead Efficiency</button>
+      <button class="tab" data-tab="all-listings">5. All Listings</button>
+      <button class="tab" data-tab="related-brand">6. Related Brand Vehicles</button>
+      <button class="tab" data-tab="days-split">7. Days Offering Split</button>
+      <button class="tab" data-tab="dealer-detail">8. Dealer & Member Detail</button>
+      <button class="tab" data-tab="other-brands">9. Other Brands In Org</button>
+    </nav>
+
+    <section id="overview" class="tab-panel active">
+      <div class="grid-two">
+        <div class="panel">
+          <h2>Dashboard 1: Executive Overview</h2>
+          <div class="subtitle">The landing page should give BMW Group a fast read on visibility, efficiency, and inventory health.</div>
+          <div id="overviewKpis" class="kpi-grid"></div>
+        </div>
+        <div class="panel">
+          <h3>Peer Snapshot</h3>
+          <div class="subtitle">Peer rows are matched in the background using canton, package type, and slot proximity.</div>
+          <table class="metric-table">
+            <thead>
+              <tr>
+                <th>Dealer</th>
+                <th>Package</th>
+                <th>Listings</th>
+                <th>LPV</th>
+                <th>CPL</th>
+                <th>Price Index</th>
+              </tr>
+            </thead>
+            <tbody id="peerTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="grid-two" style="margin-top:14px;">
+        <div class="panel">
+          <h3>Local Market Benchmarks</h3>
+          <div class="subtitle">How BMW Group compares against the surrounding dealer market by canton.</div>
+          <div id="cantonBars" class="bars"></div>
+        </div>
+        <div class="panel">
+          <h3>Performance Readout</h3>
+          <div class="note-box">
+            <strong>What this page should answer</strong>
+            Is BMW Group getting enough visibility, pricing inventory competitively, and converting attention into leads efficiently for its package level?
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="visibility" class="tab-panel">
+      <div class="grid-two">
+        <div class="panel">
+          <h2>Dashboard 2: Visibility & Traffic</h2>
+          <div class="subtitle">This page separates reach from conversion by showing SRP and PDP performance for BMW Group versus matched peers.</div>
+          <div id="visibilityKpis" class="kpi-grid"></div>
+        </div>
+        <div class="panel">
+          <h3>BMW Group vs Peer Visibility</h3>
+          <div class="subtitle">Suggested Tableau view: selected dealer plus closest peers on estimated SRP volume.</div>
+          <div id="srpBars" class="bars"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="inventory" class="tab-panel">
+      <div class="grid-two">
+        <div class="panel">
+          <h2>Dashboard 3: Inventory & Pricing Health</h2>
+          <div class="subtitle">This page helps explain whether pricing, stock aging, or assortment breadth is limiting demand.</div>
+          <div id="inventoryKpis" class="kpi-grid"></div>
+        </div>
+        <div class="panel">
+          <h3>Inventory Signals</h3>
+          <table class="metric-table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>BMW Group</th>
+                <th>Peer Median</th>
+                <th>Why It Matters</th>
+              </tr>
+            </thead>
+            <tbody id="inventorySignalBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="lead" class="tab-panel">
+      <div class="grid-two">
+        <div class="panel">
+          <h2>Dashboard 4: Lead Efficiency</h2>
+          <div class="subtitle">This page focuses on lead generation quality and package efficiency for BMW Group.</div>
+          <div id="leadKpis" class="kpi-grid"></div>
+        </div>
+        <div class="panel">
+          <h3>BMW Group vs Peer Lead Efficiency</h3>
+          <div class="subtitle">Suggested Tableau view: selected dealer benchmarked on leads per vehicle.</div>
+          <div id="leadBars" class="bars"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="all-listings" class="tab-panel">
+      <div class="panel">
+        <h2>Dashboard 5: All Listings Including QualiLogo</h2>
+        <div class="subtitle">Detailed list structure for all listed vehicles in the dealer view. QualiLogo is shown as a dedicated field.</div>
+        <table class="metric-table">
+          <thead>
+            <tr>
+              <th>Listing ID</th>
+              <th>Brand</th>
+              <th>Model</th>
+              <th>Type</th>
+              <th>Age Band</th>
+              <th>Color</th>
+              <th>QualiLogo</th>
+              <th>Price</th>
+              <th>Days Offering</th>
+              <th>PDP</th>
+              <th>Leads</th>
+            </tr>
+          </thead>
+          <tbody id="allListingsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="related-brand" class="tab-panel">
+      <div class="panel">
+        <h2>Dashboard 6: Related Brand Vehicles</h2>
+        <div class="subtitle">Detailed vehicle list for related brands within BMW Group, including listing measures.</div>
+        <table class="metric-table">
+          <thead>
+            <tr>
+              <th>Listing ID</th>
+              <th>Brand</th>
+              <th>Model</th>
+              <th>Price</th>
+              <th>Days Offering</th>
+              <th>SRP</th>
+              <th>PDP</th>
+              <th>Leads</th>
+              <th>Price Index</th>
+            </tr>
+          </thead>
+          <tbody id="relatedBrandBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="days-split" class="tab-panel">
+      <div class="panel">
+        <h2>Dashboard 7: Days Offering Split</h2>
+        <div class="subtitle">Split the number of days offering across vehicle type, age, model, and color.</div>
+        <table class="metric-table">
+          <thead>
+            <tr>
+              <th>Vehicle Type</th>
+              <th>Age Band</th>
+              <th>Model</th>
+              <th>Color</th>
+              <th>Listings</th>
+              <th>Avg Days Offering</th>
+              <th>Avg Price</th>
+              <th>Avg PDP</th>
+            </tr>
+          </thead>
+          <tbody id="daysSplitBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="dealer-detail" class="tab-panel">
+      <div class="panel">
+        <h2>Dashboard 8: Dealer / Member-ID Detail</h2>
+        <div class="subtitle">Detailed list of dealers/member IDs and related listing performance measures.</div>
+        <table class="metric-table">
+          <thead>
+            <tr>
+              <th>Dealer</th>
+              <th>Member ID</th>
+              <th>Brand Type</th>
+              <th>Active Listings</th>
+              <th>Estimated PDP</th>
+              <th>Total Leads</th>
+              <th>LPV</th>
+              <th>CPL</th>
+            </tr>
+          </thead>
+          <tbody id="dealerDetailBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="other-brands" class="tab-panel">
+      <div class="panel">
+        <h2>Dashboard 9: Other Brands In Dealer Organization</h2>
+        <div class="subtitle">Detailed view of other brands represented within the wider dealer organization.</div>
+        <table class="metric-table">
+          <thead>
+            <tr>
+              <th>Brand</th>
+              <th>Active Listings</th>
+              <th>Avg Days Offering</th>
+              <th>Avg PDP</th>
+              <th>Lead Volume</th>
+            </tr>
+          </thead>
+          <tbody id="otherBrandsBody"></tbody>
+        </table>
+      </div>
+      <div class="panel" style="margin-top:14px;">
+        <h3>Tableau Build Notes</h3>
+        <div class="footer">
+          These detailed tabs are intended as structural mockups. In production, each one should read from cached listing-grain tables rather than this illustrative data payload.
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const data = {"analysisMonth": "2026-03", "selectedDealer": {"canton": "Zürich", "visit_city": "Dielsdorf", "seller_id": "1262668", "account_name": "BMW (Schweiz) AG / MINI Schweiz", "dealer_group_scout_id": "1174", "account_type": "Importeur", "record_type_name": "Business Account", "is_key_account": "True", "latest_insertion_product_as24": "Professional Plus", "package_type": "ProfessionalPlus", "package_level": "4. ProfessionalPlus", "package_name": "as24_professionalplus_200_pv25", "slot_level": 200.0, "total_slots_booked": 208.0, "monthly_sales_price": 3977.15, "active_listings_eom": 171.0, "avg_listing_price": 42270.865497076, "avg_days_on_lot": 72.29239766081874, "avg_price_index_vs_market": 0.016254350915287482, "avg_srp_per_active_listing": 1191.65, "avg_pdp_per_active_listing": 29.691666666666666, "avg_leads_per_active_listing": 0.1125, "total_leads": 27.0, "est_total_srp_impressions": 203772.15000000002, "est_total_pdp_views": 5077.275, "leads_per_vehicle": 0.15789473684210525, "leads_per_100_pdp_views": 0.3788941902890823, "cost_per_lead": 147.30185185185186, "distinct_make_count": 1.0, "top_make_share": 1.0, "top_make_1": "mini", "top_make_2": "", "top_make_3": "", "inferred_dealer_brand_type": "Brand-focused", "listings_rank_in_canton": 20.0, "leads_rank_in_canton": 997.0, "is_top10_sample_canton": "False"}, "peerRows": [{"canton": "Zürich", "visit_city": "Feuerthalen", "seller_id": "60254", "account_name": "Garage Nordstern AG", "dealer_group_scout_id": "566", "account_type": "Member", "record_type_name": "Business Account", "is_key_account": "False", "latest_insertion_product_as24": "Professional Plus", "package_type": "ProfessionalPlus", "package_level": "4. ProfessionalPlus", "package_name": "as24_professionalplus_050_pv25", "slot_level": 50.0, "total_slots_booked": 54.0, "monthly_sales_price": 1350.65, "active_listings_eom": 47.0, "avg_listing_price": 61346.59574468085, "avg_days_on_lot": 78.70212765957447, "avg_price_index_vs_market": 0.039661390063012836, "avg_srp_per_active_listing": 1416.0727272727272, "avg_pdp_per_active_listing": 81.85454545454546, "avg_leads_per_active_listing": 0.23636363636363636, "total_leads": 13.0, "est_total_srp_impressions": 66555.41818181818, "est_total_pdp_views": 3847.1636363636367, "leads_per_vehicle": 0.2765957446808511, "leads_per_100_pdp_views": 0.28876055086628166, "cost_per_lead": 103.89615384615385, "distinct_make_count": 3.0, "top_make_share": 0.8297872340425532, "top_make_1": "volvo", "top_make_2": "lynk-co", "top_make_3": "skoda", "inferred_dealer_brand_type": "Brand-focused", "listings_rank_in_canton": 177.0, "leads_rank_in_canton": 948.0, "is_top10_sample_canton": "False"}, {"canton": "Zürich", "visit_city": "Ottenbach", "seller_id": "64098", "account_name": "Garage Albin Herzog AG", "dealer_group_scout_id": "566", "account_type": "Member", "record_type_name": "Business Account", "is_key_account": "False", "latest_insertion_product_as24": "Professional Plus", "package_type": "ProfessionalPlus", "package_level": "4. ProfessionalPlus", "package_name": "as24_professionalplus_075_pv25", "slot_level": 75.0, "total_slots_booked": 80.0, "monthly_sales_price": 1775.65, "active_listings_eom": 60.0, "avg_listing_price": 56203.50000000001, "avg_days_on_lot": 90.91666666666666, "avg_price_index_vs_market": 0.053917618829947264, "avg_srp_per_active_listing": 1305.0657894736842, "avg_pdp_per_active_listing": 66.0657894736842, "avg_leads_per_active_listing": 0.2236842105263158, "total_leads": 17.0, "est_total_srp_impressions": 78303.94736842105, "est_total_pdp_views": 3963.9473684210525, "leads_per_vehicle": 0.2833333333333333, "leads_per_100_pdp_views": 0.3385779725154352, "cost_per_lead": 104.45, "distinct_make_count": 6.0, "top_make_share": 0.9, "top_make_1": "volvo", "top_make_2": "polestar", "top_make_3": "bmw", "inferred_dealer_brand_type": "Brand-focused", "listings_rank_in_canton": 126.0, "leads_rank_in_canton": 951.0, "is_top10_sample_canton": "False"}, {"canton": "Zürich", "visit_city": "Adliswil", "seller_id": "1172721", "account_name": "Binelli Automobile AG - Adliswil", "dealer_group_scout_id": "584", "account_type": "Member", "record_type_name": "Business Account", "is_key_account": "False", "latest_insertion_product_as24": "Professional Plus", "package_type": "ProfessionalPlus", "package_level": "4. ProfessionalPlus", "package_name": "as24_professionalplus_100_pv25", "slot_level": 100.0, "total_slots_booked": 106.0, "monthly_sales_price": 2047.2, "active_listings_eom": 96.0, "avg_listing_price": 98773.12499999999, "avg_days_on_lot": 74.78125000000001, "avg_price_index_vs_market": 0.0284382017795947, "avg_srp_per_active_listing": 2141.0, "avg_pdp_per_active_listing": 80.98245614035088, "avg_leads_per_active_listing": 0.21929824561403508, "total_leads": 25.0, "est_total_srp_impressions": 205536.0, "est_total_pdp_views": 7774.315789473684, "leads_per_vehicle": 0.2604166666666667, "leads_per_100_pdp_views": 0.27079722703639514, "cost_per_lead": 81.888, "distinct_make_count": 1.0, "top_make_share": 1.0, "top_make_1": "bmw", "top_make_2": "", "top_make_3": "", "inferred_dealer_brand_type": "Brand-focused", "listings_rank_in_canton": 70.0, "leads_rank_in_canton": 954.0, "is_top10_sample_canton": "False"}, {"canton": "Zürich", "visit_city": "Wallisellen", "seller_id": "2728051", "account_name": "Volvo Cars Zurich - Kenny’s Auto-Center AG", "dealer_group_scout_id": "250", "account_type": "Member", "record_type_name": "Business Account", "is_key_account": "False", "latest_insertion_product_as24": "Professional Plus", "package_type": "ProfessionalPlus", "package_level": "4. ProfessionalPlus", "package_name": "as24_professionalplus_150_pv25_UC", "slot_level": 150.0, "total_slots_booked": 157.0, "monthly_sales_price": 2871.2, "active_listings_eom": 109.0, "avg_listing_price": 68459.63302752296, "avg_days_on_lot": 77.77981651376143, "avg_price_index_vs_market": 0.00023581152722179817, "avg_srp_per_active_listing": 713.9580419580419, "avg_pdp_per_active_listing": 38.96503496503497, "avg_leads_per_active_listing": 0.23776223776223776, "total_leads": 34.0, "est_total_srp_impressions": 77821.42657342656, "est_total_pdp_views": 4247.188811188811, "leads_per_vehicle": 0.3119266055045872, "leads_per_100_pdp_views": 0.6101938262742282, "cost_per_lead": 84.4470588235294, "distinct_make_count": 2.0, "top_make_share": 0.8532110091743119, "top_make_1": "volvo", "top_make_2": "polestar", "top_make_3": "", "inferred_dealer_brand_type": "Brand-focused", "listings_rank_in_canton": 49.0, "leads_rank_in_canton": 947.0, "is_top10_sample_canton": "False"}, {"canton": "Zürich", "visit_city": "Winterthur", "seller_id": "62929", "account_name": "Auto-Härti AG", "dealer_group_scout_id": "582", "account_type": "Member", "record_type_name": "Business Account", "is_key_account": "False", "latest_insertion_product_as24": "Professional Plus", "package_type": "ProfessionalPlus", "package_level": "4. ProfessionalPlus", "package_name": "as24_professionalplus_100_pv25", "slot_level": 100.0, "total_slots_booked": 106.0, "monthly_sales_price": 2175.15, "active_listings_eom": 88.0, "avg_listing_price": 40278.86363636363, "avg_days_on_lot": 273.3863636363637, "avg_price_index_vs_market": 0.14833625781372195, "avg_srp_per_active_listing": 1075.5445544554455, "avg_pdp_per_active_listing": 50.82178217821782, "avg_leads_per_active_listing": 0.2079207920792079, "total_leads": 21.0, "est_total_srp_impressions": 94647.9207920792, "est_total_pdp_views": 4472.316831683169, "leads_per_vehicle": 0.23863636363636365, "leads_per_100_pdp_views": 0.4091174751607247, "cost_per_lead": 103.57857142857144, "distinct_make_count": 3.0, "top_make_share": 0.9772727272727273, "top_make_1": "hyundai", "top_make_2": "citroen", "top_make_3": "toyota", "inferred_dealer_brand_type": "Brand-focused", "listings_rank_in_canton": 77.0, "leads_rank_in_canton": 959.0, "is_top10_sample_canton": "False"}, {"canton": "Zürich", "visit_city": "Niederglatt", "seller_id": "1383414", "account_name": "GP Garage AG", "dealer_group_scout_id": "581", "account_type": "Member", "record_type_name": "Business Account", "is_key_account": "False", "latest_insertion_product_as24": "Professional Plus", "package_type": "ProfessionalPlus", "package_level": "4. ProfessionalPlus", "package_name": "as24_professionalplus_025_pv25", "slot_level": 25.0, "total_slots_booked": 28.0, "monthly_sales_price": 925.65, "active_listings_eom": 14.0, "avg_listing_price": 29912.071428571428, "avg_days_on_lot": 381.7142857142858, "avg_price_index_vs_market": 0.0828848123732724, "avg_srp_per_active_listing": 2121.9411764705883, "avg_pdp_per_active_listing": 77.70588235294117, "avg_leads_per_active_listing": 0.29411764705882354, "total_leads": 5.0, "est_total_srp_impressions": 29707.176470588238, "est_total_pdp_views": 1087.8823529411764, "leads_per_vehicle": 0.35714285714285715, "leads_per_100_pdp_views": 0.3785011355034065, "cost_per_lead": 185.13, "distinct_make_count": 8.0, "top_make_share": 0.21428571428571427, "top_make_1": "hyundai", "top_make_2": "skoda", "top_make_3": "audi", "inferred_dealer_brand_type": "Independent/Multi-brand", "listings_rank_in_canton": 498.0, "leads_rank_in_canton": 927.0, "is_top10_sample_canton": "False"}, {"canton": "Zürich", "visit_city": "Obfelden", "seller_id": "62612", "account_name": "René Hächler AG", "dealer_group_scout_id": "312", "account_type": "Member", "record_type_name": "Business Account", "is_key_account": "False", "latest_insertion_product_as24": "Professional Plus", "package_type": "ProfessionalPlus", "package_level": "4. ProfessionalPlus", "package_name": "as24_professionalplus_035_pv25", "slot_level": 35.0, "total_slots_booked": 39.0, "monthly_sales_price": 1087.15, "active_listings_eom": 31.0, "avg_listing_price": 43663.81612903226, "avg_days_on_lot": 303.9677419354838, "avg_price_index_vs_market": 0.20723627807020015, "avg_srp_per_active_listing": 1379.5405405405406, "avg_pdp_per_active_listing": 55.37837837837838, "avg_leads_per_active_listing": 0.16216216216216217, "total_leads": 6.0, "est_total_srp_impressions": 42765.75675675676, "est_total_pdp_views": 1716.7297297297298, "leads_per_vehicle": 0.1935483870967742, "leads_per_100_pdp_views": 0.29282576866764276, "cost_per_lead": 181.1916666666667, "distinct_make_count": 1.0, "top_make_share": 1.0, "top_make_1": "ford", "top_make_2": "", "top_make_3": "", "inferred_dealer_brand_type": "Brand-focused", "listings_rank_in_canton": 289.0, "leads_rank_in_canton": 981.0, "is_top10_sample_canton": "False"}, {"canton": "Zürich", "visit_city": "Embrach", "seller_id": "63138", "account_name": "Embrach Edition AG", "dealer_group_scout_id": "1175", "account_type": "Member", "record_type_name": "Business Account", "is_key_account": "False", "latest_insertion_product_as24": "Professional Plus", "package_type": "ProfessionalPlus", "package_level": "4. ProfessionalPlus", "package_name": "as24_professionalplus_035_pv25_UC", "slot_level": 35.0, "total_slots_booked": 39.0, "monthly_sales_price": 1163.89, "active_listings_eom": 37.0, "avg_listing_price": 40356.216216216206, "avg_days_on_lot": 148.00000000000003, "avg_price_index_vs_market": -0.01006593747724727, "avg_srp_per_active_listing": 1130.3095238095239, "avg_pdp_per_active_listing": 66.69047619047619, "avg_leads_per_active_listing": 0.3333333333333333, "total_leads": 14.0, "est_total_srp_impressions": 41821.45238095238, "est_total_pdp_views": 2467.547619047619, "leads_per_vehicle": 0.3783783783783784, "leads_per_100_pdp_views": 0.49982149232416995, "cost_per_lead": 83.135, "distinct_make_count": 2.0, "top_make_share": 0.972972972972973, "top_make_1": "skoda", "top_make_2": "opel", "top_make_3": "", "inferred_dealer_brand_type": "Brand-focused", "listings_rank_in_canton": 239.0, "leads_rank_in_canton": 901.0, "is_top10_sample_canton": "False"}], "cantonSummary": [{"canton": "Bern", "total_leads": 36658.0, "median_lpv": 1.5, "median_cpl": 22.36818181818182, "median_days_on_lot": 125.22222222222223, "median_price_index": 0.05388619210504141}, {"canton": "Waadt", "total_leads": 24988.0, "median_lpv": 1.7307692307692308, "median_cpl": 18.224999999999998, "median_days_on_lot": 114.58823529411764, "median_price_index": 0.022381535696837866}, {"canton": "Zürich", "total_leads": 78910.0, "median_lpv": 2.2322070452911573, "median_cpl": 15.086382352941175, "median_days_on_lot": 105.94545454545454, "median_price_index": 0.03233746987471478}], "qualitySeals": ["AMAG", "Audi Occasion :plus", "Auto Welt von Rotz AG", "BMW", "BMW Premium Selection", "BYD Official Partner", "CUPRA Approved", "Jaguar Approved", "Land Rover Approved", "Merbag", "Mercedes-Benz Certified", "Mini", "Occasionen MINI NEXT", "Quality1", "SEAT Occasion Plus", "Škoda Occasion Plus", "VFAS", "Volvo Selekt", "VW Occasion Plus"], "listingRows": [{"listing_id": "20406405", "member_id": "1262668", "brand": "MINI", "model": "MINI Cooper", "vehicle_type": "Hatchback", "age_band": "0-1y", "color": "Red", "quali_logo": "BMW Premium Selection", "price_chf": 31745.0, "days_offering": 45, "srp_views": 1132, "pdp_views": 29, "leads": 0.08, "price_index": 0.043}, {"listing_id": "20406406", "member_id": "1262668", "brand": "MINI", "model": "MINI Countryman", "vehicle_type": "SUV", "age_band": "1-3y", "color": "Black", "quali_logo": "BMW", "price_chf": 33056.0, "days_offering": 58, "srp_views": 1334, "pdp_views": 37, "leads": 0.12, "price_index": 0.024}, {"listing_id": "20406407", "member_id": "1262668", "brand": "BMW", "model": "BMW X1", "vehicle_type": "SUV", "age_band": "0-1y", "color": "Blue", "quali_logo": "Mini", "price_chf": 34366.0, "days_offering": 71, "srp_views": 1537, "pdp_views": 45, "leads": 0.16, "price_index": -0.034}, {"listing_id": "20406408", "member_id": "1262668", "brand": "BMW", "model": "BMW iX1", "vehicle_type": "SUV", "age_band": "0-1y", "color": "White", "quali_logo": "Occasionen MINI NEXT", "price_chf": 35677.0, "days_offering": 84, "srp_views": 1739, "pdp_views": 54, "leads": 0.05, "price_index": 0.024}, {"listing_id": "20406409", "member_id": "1262668", "brand": "BMW", "model": "BMW 118", "vehicle_type": "Sedan", "age_band": "1-3y", "color": "Grey", "quali_logo": "Quality1", "price_chf": 36987.0, "days_offering": 97, "srp_views": 1942, "pdp_views": 20, "leads": 0.08, "price_index": 0.064}, {"listing_id": "20406410", "member_id": "1262668", "brand": "BMW", "model": "BMW X3", "vehicle_type": "SUV", "age_band": "3-5y", "color": "Black", "quali_logo": "AMAG", "price_chf": 38297.0, "days_offering": 110, "srp_views": 929, "pdp_views": 29, "leads": 0.12, "price_index": 0.07}, {"listing_id": "20406411", "member_id": "1262668", "brand": "BMW", "model": "BMW 320 Touring", "vehicle_type": "Estate", "age_band": "1-3y", "color": "Blue", "quali_logo": "Mercedes-Benz Certified", "price_chf": 39608.0, "days_offering": 32, "srp_views": 1132, "pdp_views": 37, "leads": 0.16, "price_index": -0.045}, {"listing_id": "20406412", "member_id": "1262668", "brand": "BMW", "model": "BMW i4", "vehicle_type": "Sedan", "age_band": "0-1y", "color": "White", "quali_logo": "Volvo Selekt", "price_chf": 40918.0, "days_offering": 45, "srp_views": 1334, "pdp_views": 45, "leads": 0.05, "price_index": 0.043}, {"listing_id": "20406413", "member_id": "1262668", "brand": "MINI", "model": "MINI Aceman", "vehicle_type": "SUV", "age_band": "0-1y", "color": "Green", "quali_logo": "BMW Premium Selection", "price_chf": 42229.0, "days_offering": 58, "srp_views": 1537, "pdp_views": 54, "leads": 0.08, "price_index": 0.013}, {"listing_id": "20406414", "member_id": "1262668", "brand": "BMW", "model": "BMW X5", "vehicle_type": "SUV", "age_band": "3-5y", "color": "Grey", "quali_logo": "BMW", "price_chf": 43539.0, "days_offering": 71, "srp_views": 1739, "pdp_views": 20, "leads": 0.12, "price_index": 0.013}, {"listing_id": "20406415", "member_id": "1262668", "brand": "MINI", "model": "MINI Cabrio", "vehicle_type": "Convertible", "age_band": "3-5y", "color": "Yellow", "quali_logo": "Mini", "price_chf": 44849.0, "days_offering": 84, "srp_views": 1942, "pdp_views": 29, "leads": 0.16, "price_index": 0.035}, {"listing_id": "20406416", "member_id": "1262668", "brand": "BMW", "model": "BMW M240", "vehicle_type": "Coupe", "age_band": "1-3y", "color": "Black", "quali_logo": "Occasionen MINI NEXT", "price_chf": 46160.0, "days_offering": 97, "srp_views": 929, "pdp_views": 37, "leads": 0.05, "price_index": -0.015}, {"listing_id": "20406417", "member_id": "1262668", "brand": "BMW", "model": "BMW 520 Touring", "vehicle_type": "Estate", "age_band": "3-5y", "color": "Silver", "quali_logo": "Quality1", "price_chf": 47470.0, "days_offering": 110, "srp_views": 1132, "pdp_views": 45, "leads": 0.08, "price_index": -0.04}, {"listing_id": "20406418", "member_id": "1262668", "brand": "MINI", "model": "MINI Clubman", "vehicle_type": "Estate", "age_band": "5y+", "color": "White", "quali_logo": "AMAG", "price_chf": 48781.0, "days_offering": 32, "srp_views": 1334, "pdp_views": 54, "leads": 0.12, "price_index": -0.069}, {"listing_id": "20406419", "member_id": "1262668", "brand": "BMW", "model": "BMW i5", "vehicle_type": "Sedan", "age_band": "0-1y", "color": "Blue", "quali_logo": "Mercedes-Benz Certified", "price_chf": 50091.0, "days_offering": 45, "srp_views": 1537, "pdp_views": 20, "leads": 0.16, "price_index": 0.071}, {"listing_id": "20406420", "member_id": "1262668", "brand": "BMW", "model": "BMW X2", "vehicle_type": "SUV", "age_band": "1-3y", "color": "Orange", "quali_logo": "Volvo Selekt", "price_chf": 51401.0, "days_offering": 58, "srp_views": 1739, "pdp_views": 29, "leads": 0.05, "price_index": 0.031}], "relatedBrandRows": [{"listing_id": "20406405", "member_id": "1262668", "brand": "MINI", "model": "MINI Cooper", "vehicle_type": "Hatchback", "age_band": "0-1y", "color": "Red", "quali_logo": "BMW Premium Selection", "price_chf": 31745.0, "days_offering": 45, "srp_views": 1132, "pdp_views": 29, "leads": 0.08, "price_index": 0.043}, {"listing_id": "20406406", "member_id": "1262668", "brand": "MINI", "model": "MINI Countryman", "vehicle_type": "SUV", "age_band": "1-3y", "color": "Black", "quali_logo": "BMW", "price_chf": 33056.0, "days_offering": 58, "srp_views": 1334, "pdp_views": 37, "leads": 0.12, "price_index": 0.024}, {"listing_id": "20406407", "member_id": "1262668", "brand": "BMW", "model": "BMW X1", "vehicle_type": "SUV", "age_band": "0-1y", "color": "Blue", "quali_logo": "Mini", "price_chf": 34366.0, "days_offering": 71, "srp_views": 1537, "pdp_views": 45, "leads": 0.16, "price_index": -0.034}, {"listing_id": "20406408", "member_id": "1262668", "brand": "BMW", "model": "BMW iX1", "vehicle_type": "SUV", "age_band": "0-1y", "color": "White", "quali_logo": "Occasionen MINI NEXT", "price_chf": 35677.0, "days_offering": 84, "srp_views": 1739, "pdp_views": 54, "leads": 0.05, "price_index": 0.024}, {"listing_id": "20406409", "member_id": "1262668", "brand": "BMW", "model": "BMW 118", "vehicle_type": "Sedan", "age_band": "1-3y", "color": "Grey", "quali_logo": "Quality1", "price_chf": 36987.0, "days_offering": 97, "srp_views": 1942, "pdp_views": 20, "leads": 0.08, "price_index": 0.064}, {"listing_id": "20406410", "member_id": "1262668", "brand": "BMW", "model": "BMW X3", "vehicle_type": "SUV", "age_band": "3-5y", "color": "Black", "quali_logo": "AMAG", "price_chf": 38297.0, "days_offering": 110, "srp_views": 929, "pdp_views": 29, "leads": 0.12, "price_index": 0.07}, {"listing_id": "20406411", "member_id": "1262668", "brand": "BMW", "model": "BMW 320 Touring", "vehicle_type": "Estate", "age_band": "1-3y", "color": "Blue", "quali_logo": "Mercedes-Benz Certified", "price_chf": 39608.0, "days_offering": 32, "srp_views": 1132, "pdp_views": 37, "leads": 0.16, "price_index": -0.045}, {"listing_id": "20406412", "member_id": "1262668", "brand": "BMW", "model": "BMW i4", "vehicle_type": "Sedan", "age_band": "0-1y", "color": "White", "quali_logo": "Volvo Selekt", "price_chf": 40918.0, "days_offering": 45, "srp_views": 1334, "pdp_views": 45, "leads": 0.05, "price_index": 0.043}, {"listing_id": "20406413", "member_id": "1262668", "brand": "MINI", "model": "MINI Aceman", "vehicle_type": "SUV", "age_band": "0-1y", "color": "Green", "quali_logo": "BMW Premium Selection", "price_chf": 42229.0, "days_offering": 58, "srp_views": 1537, "pdp_views": 54, "leads": 0.08, "price_index": 0.013}, {"listing_id": "20406414", "member_id": "1262668", "brand": "BMW", "model": "BMW X5", "vehicle_type": "SUV", "age_band": "3-5y", "color": "Grey", "quali_logo": "BMW", "price_chf": 43539.0, "days_offering": 71, "srp_views": 1739, "pdp_views": 20, "leads": 0.12, "price_index": 0.013}, {"listing_id": "20406415", "member_id": "1262668", "brand": "MINI", "model": "MINI Cabrio", "vehicle_type": "Convertible", "age_band": "3-5y", "color": "Yellow", "quali_logo": "Mini", "price_chf": 44849.0, "days_offering": 84, "srp_views": 1942, "pdp_views": 29, "leads": 0.16, "price_index": 0.035}, {"listing_id": "20406416", "member_id": "1262668", "brand": "BMW", "model": "BMW M240", "vehicle_type": "Coupe", "age_band": "1-3y", "color": "Black", "quali_logo": "Occasionen MINI NEXT", "price_chf": 46160.0, "days_offering": 97, "srp_views": 929, "pdp_views": 37, "leads": 0.05, "price_index": -0.015}, {"listing_id": "20406417", "member_id": "1262668", "brand": "BMW", "model": "BMW 520 Touring", "vehicle_type": "Estate", "age_band": "3-5y", "color": "Silver", "quali_logo": "Quality1", "price_chf": 47470.0, "days_offering": 110, "srp_views": 1132, "pdp_views": 45, "leads": 0.08, "price_index": -0.04}, {"listing_id": "20406418", "member_id": "1262668", "brand": "MINI", "model": "MINI Clubman", "vehicle_type": "Estate", "age_band": "5y+", "color": "White", "quali_logo": "AMAG", "price_chf": 48781.0, "days_offering": 32, "srp_views": 1334, "pdp_views": 54, "leads": 0.12, "price_index": -0.069}, {"listing_id": "20406419", "member_id": "1262668", "brand": "BMW", "model": "BMW i5", "vehicle_type": "Sedan", "age_band": "0-1y", "color": "Blue", "quali_logo": "Mercedes-Benz Certified", "price_chf": 50091.0, "days_offering": 45, "srp_views": 1537, "pdp_views": 20, "leads": 0.16, "price_index": 0.071}, {"listing_id": "20406420", "member_id": "1262668", "brand": "BMW", "model": "BMW X2", "vehicle_type": "SUV", "age_band": "1-3y", "color": "Orange", "quali_logo": "Volvo Selekt", "price_chf": 51401.0, "days_offering": 58, "srp_views": 1739, "pdp_views": 29, "leads": 0.05, "price_index": 0.031}], "daysOfferingSplitRows": [{"vehicle_type": "Estate", "age_band": "3-5y", "model": "BMW 520 Touring", "color": "Silver", "listing_count": 1, "avg_days_offering": 110.0, "avg_price_chf": 47470.0, "avg_pdp_views": 45.0}, {"vehicle_type": "SUV", "age_band": "3-5y", "model": "BMW X3", "color": "Black", "listing_count": 1, "avg_days_offering": 110.0, "avg_price_chf": 38297.0, "avg_pdp_views": 29.0}, {"vehicle_type": "Sedan", "age_band": "1-3y", "model": "BMW 118", "color": "Grey", "listing_count": 1, "avg_days_offering": 97.0, "avg_price_chf": 36987.0, "avg_pdp_views": 20.0}, {"vehicle_type": "Coupe", "age_band": "1-3y", "model": "BMW M240", "color": "Black", "listing_count": 1, "avg_days_offering": 97.0, "avg_price_chf": 46160.0, "avg_pdp_views": 37.0}, {"vehicle_type": "SUV", "age_band": "0-1y", "model": "BMW iX1", "color": "White", "listing_count": 1, "avg_days_offering": 84.0, "avg_price_chf": 35677.0, "avg_pdp_views": 54.0}, {"vehicle_type": "Convertible", "age_band": "3-5y", "model": "MINI Cabrio", "color": "Yellow", "listing_count": 1, "avg_days_offering": 84.0, "avg_price_chf": 44849.0, "avg_pdp_views": 29.0}, {"vehicle_type": "SUV", "age_band": "0-1y", "model": "BMW X1", "color": "Blue", "listing_count": 1, "avg_days_offering": 71.0, "avg_price_chf": 34366.0, "avg_pdp_views": 45.0}, {"vehicle_type": "SUV", "age_band": "3-5y", "model": "BMW X5", "color": "Grey", "listing_count": 1, "avg_days_offering": 71.0, "avg_price_chf": 43539.0, "avg_pdp_views": 20.0}, {"vehicle_type": "SUV", "age_band": "1-3y", "model": "BMW X2", "color": "Orange", "listing_count": 1, "avg_days_offering": 58.0, "avg_price_chf": 51401.0, "avg_pdp_views": 29.0}, {"vehicle_type": "SUV", "age_band": "0-1y", "model": "MINI Aceman", "color": "Green", "listing_count": 1, "avg_days_offering": 58.0, "avg_price_chf": 42229.0, "avg_pdp_views": 54.0}, {"vehicle_type": "SUV", "age_band": "1-3y", "model": "MINI Countryman", "color": "Black", "listing_count": 1, "avg_days_offering": 58.0, "avg_price_chf": 33056.0, "avg_pdp_views": 37.0}, {"vehicle_type": "Sedan", "age_band": "0-1y", "model": "BMW i4", "color": "White", "listing_count": 1, "avg_days_offering": 45.0, "avg_price_chf": 40918.0, "avg_pdp_views": 45.0}], "dealerMeasureRows": [{"dealer_name": "BMW (Schweiz) AG / MINI Schweiz", "member_id": "1262668", "brand_type": "Brand-focused", "active_listings": 171.0, "est_pdp_views": 5077.275, "total_leads": 27.0, "lpv": 0.15789473684210525, "cpl": 147.30185185185186}, {"dealer_name": "Garage Nordstern AG", "member_id": "60254", "brand_type": "Brand-focused", "active_listings": 47.0, "est_pdp_views": 3847.1636363636367, "total_leads": 13.0, "lpv": 0.2765957446808511, "cpl": 103.89615384615385}, {"dealer_name": "Garage Albin Herzog AG", "member_id": "64098", "brand_type": "Brand-focused", "active_listings": 60.0, "est_pdp_views": 3963.9473684210525, "total_leads": 17.0, "lpv": 0.2833333333333333, "cpl": 104.45}, {"dealer_name": "Binelli Automobile AG - Adliswil", "member_id": "1172721", "brand_type": "Brand-focused", "active_listings": 96.0, "est_pdp_views": 7774.315789473684, "total_leads": 25.0, "lpv": 0.2604166666666667, "cpl": 81.888}, {"dealer_name": "Volvo Cars Zurich - Kenny’s Auto-Center AG", "member_id": "2728051", "brand_type": "Brand-focused", "active_listings": 109.0, "est_pdp_views": 4247.188811188811, "total_leads": 34.0, "lpv": 0.3119266055045872, "cpl": 84.4470588235294}, {"dealer_name": "Auto-Härti AG", "member_id": "62929", "brand_type": "Brand-focused", "active_listings": 88.0, "est_pdp_views": 4472.316831683169, "total_leads": 21.0, "lpv": 0.23863636363636365, "cpl": 103.57857142857144}, {"dealer_name": "GP Garage AG", "member_id": "1383414", "brand_type": "Independent/Multi-brand", "active_listings": 14.0, "est_pdp_views": 1087.8823529411764, "total_leads": 5.0, "lpv": 0.35714285714285715, "cpl": 185.13}, {"dealer_name": "René Hächler AG", "member_id": "62612", "brand_type": "Brand-focused", "active_listings": 31.0, "est_pdp_views": 1716.7297297297298, "total_leads": 6.0, "lpv": 0.1935483870967742, "cpl": 181.1916666666667}, {"dealer_name": "Embrach Edition AG", "member_id": "63138", "brand_type": "Brand-focused", "active_listings": 37.0, "est_pdp_views": 2467.547619047619, "total_leads": 14.0, "lpv": 0.3783783783783784, "cpl": 83.135}], "orgOtherBrandRows": [{"brand": "BMW Motorrad", "active_listings": 14, "avg_days_offering": 41, "avg_pdp_views": 22, "lead_volume": 3.0}, {"brand": "ALPINA", "active_listings": 6, "avg_days_offering": 58, "avg_pdp_views": 37, "lead_volume": 1.0}, {"brand": "Rolls-Royce", "active_listings": 2, "avg_days_offering": 73, "avg_pdp_views": 18, "lead_volume": 0.0}]};
+    const selectedDealer = data.selectedDealer;
+
+    function formatNumber(value, digits = 0) {
+      if (value === null || value === undefined || Number.isNaN(value)) return "–";
+      return new Intl.NumberFormat("en-US", {
+        maximumFractionDigits: digits,
+        minimumFractionDigits: digits
+      }).format(value);
+    }
+
+    function formatPercent(value, digits = 1) {
+      if (value === null || value === undefined || Number.isNaN(value)) return "–";
+      return `${formatNumber(value * 100, digits)}%`;
+    }
+
+    function formatCurrency(value, digits = 0) {
+      if (value === null || value === undefined || Number.isNaN(value)) return "–";
+      return `CHF ${formatNumber(value, digits)}`;
+    }
+
+    function median(values) {
+      const clean = values.filter(value => value !== null && value !== undefined && !Number.isNaN(value)).sort((a, b) => a - b);
+      if (!clean.length) return null;
+      const mid = Math.floor(clean.length / 2);
+      return clean.length % 2 ? clean[mid] : (clean[mid - 1] + clean[mid]) / 2;
+    }
+
+    function buildKpiCard(label, value, context) {
+      return `
+        <div class="kpi">
+          <div class="kpi-label">${label}</div>
+          <div class="kpi-value">${value}</div>
+          <div class="kpi-context">${context}</div>
+        </div>
+      `;
+    }
+
+    function renderBars(containerId, rows, metricKey, formatter, alt = false) {
+      const container = document.getElementById(containerId);
+      const maxValue = Math.max(...rows.map(row => row[metricKey] || 0), 1);
+      container.innerHTML = rows.map(row => `
+        <div class="bar-row">
+          <div>${row.account_name}</div>
+          <div class="bar-track">
+            <div class="bar-fill ${alt ? "alt" : ""}" style="width:${((row[metricKey] || 0) / maxValue) * 100}%"></div>
+          </div>
+          <div>${formatter(row[metricKey] || 0)}</div>
+        </div>
+      `).join("");
+    }
+
+    function render() {
+      const peerRows = [selectedDealer].concat(data.peerRows);
+      const cantonBenchmark = data.cantonSummary.find(row => row.canton === selectedDealer.canton);
+      const peerMedianPriceIndex = median(peerRows.map(row => row.avg_price_index_vs_market)) || 0;
+      const peerMedianDays = median(peerRows.map(row => row.avg_days_on_lot)) || 0;
+      const peerMedianMakes = median(peerRows.map(row => row.distinct_make_count)) || 0;
+      const peerMedianLPV = median(peerRows.map(row => row.leads_per_vehicle)) || 0;
+
+      document.getElementById("summaryDealer").textContent = "BMW Group";
+      document.getElementById("summaryLocation").textContent = `${selectedDealer.visit_city}, ${selectedDealer.canton}`;
+      document.getElementById("summaryPackage").textContent = `${selectedDealer.package_type} · Slot ${formatNumber(selectedDealer.slot_level, 0)}`;
+
+      document.getElementById("overviewKpis").innerHTML = [
+        buildKpiCard("Active Listings", formatNumber(selectedDealer.active_listings_eom), `Peer LPV ${formatNumber(peerMedianLPV, 2)}`),
+        buildKpiCard("Estimated Leads", formatNumber(selectedDealer.total_leads), `Canton total ${formatNumber(cantonBenchmark?.total_leads || 0)}`),
+        buildKpiCard("Leads Per Vehicle", formatNumber(selectedDealer.leads_per_vehicle, 2), `Canton median ${formatNumber(cantonBenchmark?.median_lpv || 0, 2)}`),
+        buildKpiCard("Cost Per Lead", formatCurrency(selectedDealer.cost_per_lead, 0), `Canton median ${formatCurrency(cantonBenchmark?.median_cpl || 0, 0)}`),
+        buildKpiCard("Price vs Market", formatPercent(selectedDealer.avg_price_index_vs_market, 1), `Peer median ${formatPercent(peerMedianPriceIndex, 1)}`),
+        buildKpiCard("Days On Lot", formatNumber(selectedDealer.avg_days_on_lot, 0), `Peer median ${formatNumber(peerMedianDays, 0)} days`),
+        buildKpiCard("Package", selectedDealer.package_type, `Slot level ${formatNumber(selectedDealer.slot_level, 0)}`),
+        buildKpiCard("Brand Mix", selectedDealer.inferred_dealer_brand_type, `Top make ${selectedDealer.top_make_1 || "–"}`)
+      ].join("");
+
+      document.getElementById("peerTableBody").innerHTML = peerRows.map(row => `
+        <tr>
+          <td>${row.account_name}${row.seller_id === selectedDealer.seller_id ? " (BMW Group)" : ""}</td>
+          <td>${row.package_type}</td>
+          <td>${formatNumber(row.active_listings_eom)}</td>
+          <td>${formatNumber(row.leads_per_vehicle, 2)}</td>
+          <td>${formatCurrency(row.cost_per_lead, 0)}</td>
+          <td>${formatPercent(row.avg_price_index_vs_market, 1)}</td>
+        </tr>
+      `).join("");
+
+      renderBars("cantonBars", data.cantonSummary.map(row => ({
+        account_name: row.canton,
+        total_leads: row.total_leads
+      })), "total_leads", value => formatNumber(value), true);
+
+      document.getElementById("visibilityKpis").innerHTML = [
+        buildKpiCard("Estimated SRP", formatNumber(selectedDealer.est_total_srp_impressions, 0), `${formatNumber(selectedDealer.avg_srp_per_active_listing, 0)} per active listing`),
+        buildKpiCard("Estimated PDP", formatNumber(selectedDealer.est_total_pdp_views, 0), `${formatNumber(selectedDealer.avg_pdp_per_active_listing, 1)} per active listing`),
+        buildKpiCard("PDP to Lead", formatPercent(selectedDealer.leads_per_100_pdp_views / 100, 2), `From ${formatNumber(selectedDealer.total_leads)} total leads`),
+        buildKpiCard("Package Cost", formatCurrency(selectedDealer.monthly_sales_price, 0), `${formatNumber(selectedDealer.total_slots_booked, 0)} slots booked`)
+      ].join("");
+      renderBars("srpBars", peerRows, "est_total_srp_impressions", value => formatNumber(value, 0));
+
+      document.getElementById("inventoryKpis").innerHTML = [
+        buildKpiCard("Average Listing Price", formatCurrency(selectedDealer.avg_listing_price, 0), `Top make share ${formatPercent(selectedDealer.top_make_share, 0)}`),
+        buildKpiCard("Price Index vs Market", formatPercent(selectedDealer.avg_price_index_vs_market, 1), `Peer median ${formatPercent(peerMedianPriceIndex, 1)}`),
+        buildKpiCard("Average Days On Lot", formatNumber(selectedDealer.avg_days_on_lot, 0), `Peer median ${formatNumber(peerMedianDays, 0)} days`),
+        buildKpiCard("Distinct Makes", formatNumber(selectedDealer.distinct_make_count, 0), `Peer median ${formatNumber(peerMedianMakes, 0)}`)
+      ].join("");
+
+      const inventoryRows = [
+        ["Pricing vs market", formatPercent(selectedDealer.avg_price_index_vs_market, 1), formatPercent(peerMedianPriceIndex, 1), "Tests whether BMW Group inventory is priced above or near the matched market."],
+        ["Aging inventory", `${formatNumber(selectedDealer.avg_days_on_lot, 0)} days`, `${formatNumber(peerMedianDays, 0)} days`, "Longer aging can reduce conversion even when exposure remains healthy."],
+        ["Assortment breadth", formatNumber(selectedDealer.distinct_make_count, 0), formatNumber(peerMedianMakes, 0), "Shows how broad the available stock mix is relative to peers."],
+        ["Top make concentration", formatPercent(selectedDealer.top_make_share, 0), "–", "Indicates how concentrated the inventory is around the top make."]
+      ];
+      document.getElementById("inventorySignalBody").innerHTML = inventoryRows.map(row => `
+        <tr>
+          <td>${row[0]}</td>
+          <td>${row[1]}</td>
+          <td>${row[2]}</td>
+          <td>${row[3]}</td>
+        </tr>
+      `).join("");
+
+      document.getElementById("leadKpis").innerHTML = [
+        buildKpiCard("Total Leads", formatNumber(selectedDealer.total_leads, 0), `Rank in canton ${formatNumber(selectedDealer.leads_rank_in_canton, 0)}`),
+        buildKpiCard("Leads Per Vehicle", formatNumber(selectedDealer.leads_per_vehicle, 2), `${formatNumber(selectedDealer.avg_leads_per_active_listing, 2)} avg per active listing`),
+        buildKpiCard("Cost Per Lead", formatCurrency(selectedDealer.cost_per_lead, 0), `Monthly sales price ${formatCurrency(selectedDealer.monthly_sales_price, 0)}`),
+        buildKpiCard("Lead Rate per 100 PDP", formatNumber(selectedDealer.leads_per_100_pdp_views, 2), `Helpful to separate exposure from conversion quality`)
+      ].join("");
+      renderBars("leadBars", peerRows, "leads_per_vehicle", value => formatNumber(value, 2), true);
+
+      document.getElementById("allListingsBody").innerHTML = data.listingRows.map(row => `
+        <tr>
+          <td>${row.listing_id}</td>
+          <td>${row.brand}</td>
+          <td>${row.model}</td>
+          <td>${row.vehicle_type}</td>
+          <td>${row.age_band}</td>
+          <td>${row.color}</td>
+          <td><span class="badge">${row.quali_logo}</span></td>
+          <td>${formatCurrency(row.price_chf, 0)}</td>
+          <td>${formatNumber(row.days_offering, 0)}</td>
+          <td>${formatNumber(row.pdp_views, 0)}</td>
+          <td>${formatNumber(row.leads, 2)}</td>
+        </tr>
+      `).join("");
+
+      document.getElementById("relatedBrandBody").innerHTML = data.relatedBrandRows.map(row => `
+        <tr>
+          <td>${row.listing_id}</td>
+          <td>${row.brand}</td>
+          <td>${row.model}</td>
+          <td>${formatCurrency(row.price_chf, 0)}</td>
+          <td>${formatNumber(row.days_offering, 0)}</td>
+          <td>${formatNumber(row.srp_views, 0)}</td>
+          <td>${formatNumber(row.pdp_views, 0)}</td>
+          <td>${formatNumber(row.leads, 2)}</td>
+          <td>${formatPercent(row.price_index, 1)}</td>
+        </tr>
+      `).join("");
+
+      document.getElementById("daysSplitBody").innerHTML = data.daysOfferingSplitRows.map(row => `
+        <tr>
+          <td>${row.vehicle_type}</td>
+          <td>${row.age_band}</td>
+          <td>${row.model}</td>
+          <td>${row.color}</td>
+          <td>${formatNumber(row.listing_count, 0)}</td>
+          <td>${formatNumber(row.avg_days_offering, 1)}</td>
+          <td>${formatCurrency(row.avg_price_chf, 0)}</td>
+          <td>${formatNumber(row.avg_pdp_views, 1)}</td>
+        </tr>
+      `).join("");
+
+      document.getElementById("dealerDetailBody").innerHTML = data.dealerMeasureRows.map(row => `
+        <tr>
+          <td>${row.dealer_name}</td>
+          <td>${row.member_id}</td>
+          <td>${row.brand_type}</td>
+          <td>${formatNumber(row.active_listings, 0)}</td>
+          <td>${formatNumber(row.est_pdp_views, 0)}</td>
+          <td>${formatNumber(row.total_leads, 0)}</td>
+          <td>${formatNumber(row.lpv, 2)}</td>
+          <td>${formatCurrency(row.cpl, 0)}</td>
+        </tr>
+      `).join("");
+
+      document.getElementById("otherBrandsBody").innerHTML = data.orgOtherBrandRows.map(row => `
+        <tr>
+          <td>${row.brand}</td>
+          <td>${formatNumber(row.active_listings, 0)}</td>
+          <td>${formatNumber(row.avg_days_offering, 0)}</td>
+          <td>${formatNumber(row.avg_pdp_views, 0)}</td>
+          <td>${formatNumber(row.lead_volume, 1)}</td>
+        </tr>
+      `).join("");
+    }
+
+    document.querySelectorAll(".tab").forEach(button => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+        document.querySelectorAll(".tab-panel").forEach(panel => panel.classList.remove("active"));
+        button.classList.add("active");
+        document.getElementById(button.dataset.tab).classList.add("active");
+      });
+    });
+
+    render();
+  </script>
+</body>
+</html>
